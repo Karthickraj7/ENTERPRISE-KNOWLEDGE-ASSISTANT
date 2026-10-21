@@ -1,0 +1,16 @@
+ACME ENTERPRISE ENGINEERING ONBOARDING GUIDE (2026 EDITION)
+
+Section 1: Code Review and CI Quality Gates
+All pull requests require passing GitHub Actions checks including unit tests, tenant-isolation tests,
+Alembic upgrade/downgrade verification, and secret scanning. No API keys or customer documents may ever
+be committed to the repository.
+
+Section 2: AI Provider Data Governance Policy
+Free-tier hosted LLM APIs (such as the Gemini free tier) may use submitted prompts to improve vendor products.
+Therefore, ALLOW_TRAINING_USE_PROVIDERS defaults to false. Confidential tenant documents must never be sent
+to any provider flagged with data_used_for_training=true. Local open-weight servers connected via the
+openai_compatible adapter keep all inference traffic within corporate infrastructure.
+
+Section 3: Support Escalation Contacts
+For ingestion queue alerts or embedding migration questions, contact the Knowledge Platform Team in #platform-rag-ops
+or email platform-ops@acme-corp.internal. Include the X-Request-ID header from any failed API response.

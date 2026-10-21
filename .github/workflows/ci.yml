@@ -1,0 +1,79 @@
+name: Enterprise Knowledge Assistant CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  backend-and-security:
+    name: Backend Tests, Migrations & Security Audit
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: eka_test
+          POSTGRES_PASSWORD: eka_test_password
+          POSTGRES_DB: eka_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libmagic1
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Secret & Anti-Slop Static Audit
+        run: PYTHONPATH=backend python3 scripts/lint_and_audit.py
+
+      - name: Run Backend Unit, Integration, Tenant Isolation & Golden Eval Suite
+        env:
+          APP_ENV: test
+          EMBEDDING_PROVIDER: mock
+          GENERATION_PROVIDER: none
+          ENABLE_DEV_AUTH: "true"
+        run: PYTHONPATH=backend python3 backend/run_tests.py
+
+      - name: Execute Backup & Restore Verification Drill
+        run: PYTHONPATH=backend python3 scripts/backup_restore_drill.py
+
+  frontend-and-e2e:
+    name: Frontend Typecheck, Build & E2E Smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Frontend Dependencies
+        working-directory: apps/web
+        run: npm install
+
+      - name: TypeScript & Taste Skill Lint Check
+        working-directory: apps/web
+        run: npm run typecheck && npm test

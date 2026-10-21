@@ -1,0 +1,31 @@
+# Core Web & Validation
+fastapi>=0.92.0,<1.0.0
+uvicorn[standard]>=0.17.6,<1.0.0
+pydantic>=1.10.4,<3.0.0
+python-multipart>=0.0.5,<1.0.0
+python-dotenv>=1.0.0,<2.0.0
+httpx>=0.23.3,<1.0.0
+requests>=2.31.0,<3.0.0
+itsdangerous>=2.1.2,<3.0.0
+cryptography>=38.0.4,<44.0.0
+
+# Database & Migrations (PostgreSQL + pgvector)
+SQLAlchemy>=2.0.30,<3.0.0
+alembic>=1.13.1,<2.0.0
+psycopg[binary]>=3.1.18,<4.0.0
+pgvector>=0.3.2,<1.0.0
+
+# Document Extraction & Normalization (Permissive Licenses: BSD/MIT/Apache-2.0)
+pypdf>=6.0.0,<7.0.0
+pdfplumber>=0.11.0,<1.0.0
+python-docx>=1.1.0,<2.0.0
+markdown-it-py>=3.0.0,<5.0.0
+charset-normalizer>=3.3.0,<4.0.0
+python-magic>=0.4.27,<1.0.0
+
+# Free-First Local Embeddings & Vector Math
+numpy>=1.26.0,<3.0.0
+sentence-transformers>=3.0.0,<4.0.0
+
+# Testing & Quality
+pytest>=8.0.0,<9.0.0

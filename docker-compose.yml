@@ -1,0 +1,90 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: eka-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-eka_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eka_local_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-eka_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init-pgvector.sql:/docker-entrypoint-initdb.d/01-init-pgvector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eka_user} -d ${POSTGRES_DB:-eka_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: eka-api
+    restart: unless-stopped
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-eka_user}:${POSTGRES_PASSWORD:-eka_local_dev_password}@postgres:5432/${POSTGRES_DB:-eka_db}
+      STORAGE_BACKEND: local
+      LOCAL_STORAGE_PATH: /app/var/storage
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-sentence_transformers}
+      GENERATION_PROVIDER: ${GENERATION_PROVIDER:-none}
+    ports:
+      - "8000:8000"
+    volumes:
+      - storage_data:/app/var/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m scripts.seed_demo &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.backend
+    container_name: eka-worker
+    restart: unless-stopped
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-eka_user}:${POSTGRES_PASSWORD:-eka_local_dev_password}@postgres:5432/${POSTGRES_DB:-eka_db}
+      STORAGE_BACKEND: local
+      LOCAL_STORAGE_PATH: /app/var/storage
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-sentence_transformers}
+    volumes:
+      - storage_data:/app/var/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    command: ["python", "-m", "worker.main"]
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.web
+    container_name: eka-web
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  storage_data:

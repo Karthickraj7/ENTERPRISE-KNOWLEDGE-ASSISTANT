@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eka-backend"
+version = "2.0.0"
+description = "Enterprise Knowledge Assistant - Free-First RAG Backend & Ingestion Worker"
+readme = "../README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+    "fastapi>=0.92.0",
+    "uvicorn>=0.17.6",
+    "pydantic>=1.10.4",
+    "SQLAlchemy>=2.0.30",
+    "alembic>=1.13.1",
+    "psycopg[binary]>=3.1.18",
+    "pgvector>=0.3.2",
+    "pypdf>=6.0.0",
+    "python-docx>=1.1.0",
+    "markdown-it-py>=3.0.0",
+    "charset-normalizer>=3.3.0",
+    "numpy>=1.26.0",
+    "httpx>=0.23.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
