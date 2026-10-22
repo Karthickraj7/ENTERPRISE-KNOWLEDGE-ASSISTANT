@@ -2,41 +2,63 @@ import React from "react";
 
 interface StatusBadgeProps {
   status: string;
+  size?: "sm" | "md";
 }
 
-const STATUS_STYLES: Record<string, { label: string; classes: string }> = {
+const STATUS_CONFIG: Record<string, { label: string; dot: string; bg: string; text: string; border: string }> = {
   indexed: {
     label: "Indexed",
-    classes: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800"
+    dot: "bg-emerald-500",
+    bg: "bg-status-indexed-bg",
+    text: "text-status-indexed",
+    border: "border-status-indexed-border"
   },
   processing: {
     label: "Processing",
-    classes: "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800"
+    dot: "bg-amber-500 animate-pulse",
+    bg: "bg-status-processing-bg",
+    text: "text-status-processing",
+    border: "border-status-processing-border"
   },
   queued: {
     label: "Queued",
-    classes: "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
+    dot: "bg-slate-400",
+    bg: "bg-elevated",
+    text: "text-muted",
+    border: "border-subtle"
   },
   failed: {
     label: "Failed",
-    classes: "bg-red-50 text-red-800 border-red-200 dark:bg-red-950/50 dark:text-red-300 dark:border-red-800"
+    dot: "bg-red-500",
+    bg: "bg-status-failed-bg",
+    text: "text-status-failed",
+    border: "border-status-failed-border"
   },
   needs_ocr: {
     label: "Needs OCR",
-    classes: "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/50 dark:text-orange-300 dark:border-orange-800"
+    dot: "bg-orange-500",
+    bg: "bg-status-warning-bg",
+    text: "text-status-warning",
+    border: "border-status-warning-border"
   }
 };
 
-export function StatusBadge({ status }: StatusBadgeProps) {
-  const cfg = STATUS_STYLES[status] || {
+export function StatusBadge({ status, size = "sm" }: StatusBadgeProps) {
+  const cfg = STATUS_CONFIG[status] || {
     label: status,
-    classes: "bg-slate-100 text-slate-700 border-slate-300"
+    dot: "bg-slate-400",
+    bg: "bg-elevated",
+    text: "text-muted",
+    border: "border-subtle"
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-xs font-medium border rounded-control tabular-nums ${cfg.classes}`}
+      className={`inline-flex items-center gap-1.5 font-medium border rounded-control tabular-nums ${cfg.bg} ${cfg.text} ${cfg.border} ${
+        size === "sm" ? "px-2 py-0.5 text-xs" : "px-2.5 py-1 text-xs"
+      }`}
     >
+      <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`} />
       {cfg.label}
     </span>
   );

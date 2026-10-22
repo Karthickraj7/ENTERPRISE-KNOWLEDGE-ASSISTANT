@@ -3,63 +3,365 @@
 @tailwind utilities;
 
 /* ============================================================================
- * Taste Skill v2 (--app mode) Design Token System
- * Lock 1: Color Consistency Lock (Off-white #FAF9F5 / Off-black #0E1116, single cobalt accent)
- * Lock 2: Shape Consistency Lock (6px panel radius, 4px control radius)
- * Lock 3: Page Theme Lock (WCAG 2.2 AA contrast parity across Light & Dark)
+ * Enterprise Knowledge Assistant - Knowledge Signal Design System
+ * Inspired by research instruments, observability consoles, and advanced developer tools
  * ============================================================================ */
+
+/* --- Default (Dark) Knowledge Signal Palette --- */
 :root {
-  --bg-canvas: #FAF9F5;
-  --bg-surface: #FFFFFF;
-  --bg-elevated: #F3F2EE;
-  --text-primary: #14171F;
-  --text-secondary: #525866;
-  --border-subtle: #E2E0D8;
-  --accent-primary: #1D4ED8;
-  --accent-hover: #1E40AF;
-  --accent-soft: #EFF6FF;
-  --status-indexed: #047857;
-  --status-processing: #B45309;
-  --status-failed: #B91C1C;
-  --status-warning: #92400E;
+  /* Canvas and Surfaces */
+  --bg-canvas: #080B12;
+  --bg-surface: #0D1220;
+  --bg-elevated: #12192A;
+  --bg-inset: #06080F;
+  --bg-overlay: rgba(5, 7, 13, 0.78);
+
+  /* Text & Contrast */
+  --text-primary: #F2F5FC;
+  --text-secondary: #A0ABC0;
+  --text-tertiary: #68758D;
+  --text-on-accent: #080B12;
+
+  /* Borders & Dividers */
+  --border-subtle: #263047;
+  --border-default: #35425F;
+  --border-strong: #4B5C82;
+  --border-focus: #9B8CFF;
+
+  /* Knowledge Signal Accents */
+  --accent-primary: #9B8CFF;
+  --accent-hover: #B2A7FF;
+  --accent-active: #806EFF;
+  --accent-soft: rgba(155, 140, 255, 0.12);
+  --accent-muted: rgba(155, 140, 255, 0.22);
+
+  /* Evidence Cyan Accent */
+  --accent-cyan: #67DFF5;
+  --accent-cyan-soft: rgba(103, 223, 245, 0.12);
+  --accent-cyan-border: rgba(103, 223, 245, 0.35);
+
+  /* Semantic Telemetry States */
+  --status-indexed: #55D6A5;
+  --status-indexed-bg: rgba(85, 214, 165, 0.12);
+  --status-indexed-border: rgba(85, 214, 165, 0.3);
+  --status-processing: #F4C879;
+  --status-processing-bg: rgba(244, 200, 121, 0.12);
+  --status-processing-border: rgba(244, 200, 121, 0.3);
+  --status-failed: #FF7F91;
+  --status-failed-bg: rgba(255, 127, 145, 0.12);
+  --status-failed-border: rgba(255, 127, 145, 0.3);
+  --status-warning: #F4C879;
+  --status-warning-bg: rgba(244, 200, 121, 0.12);
+  --status-warning-border: rgba(244, 200, 121, 0.3);
+  --status-info: #67DFF5;
+  --status-info-bg: rgba(103, 223, 245, 0.12);
+  --status-info-border: rgba(103, 223, 245, 0.3);
+
+  /* Geometry & Radii */
   --radius-panel: 6px;
   --radius-control: 4px;
+  --radius-full: 9999px;
+
+  /* Instrument Shadows & Glows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 6px 12px -4px rgba(0, 0, 0, 0.5);
+  --shadow-overlay: 0 24px 38px 3px rgba(0, 0, 0, 0.7), 0 9px 46px 8px rgba(0, 0, 0, 0.6);
+  --glow-violet: 0 0 24px -4px rgba(155, 140, 255, 0.35);
+  --glow-cyan: 0 0 20px -3px rgba(103, 223, 245, 0.3);
+
+  /* Sidebar Dimensions */
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 64px;
+
+  /* Precision Motion */
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-slow: 240ms;
+  --ease-default: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* --- Clean Editorial Light Theme (for user toggle) --- */
+html:not(.dark) {
+  --bg-canvas: #F6F8FC;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #EDF2F9;
+  --bg-inset: #E4EBF5;
+  --bg-overlay: rgba(14, 20, 36, 0.5);
+
+  --text-primary: #0C111D;
+  --text-secondary: #475467;
+  --text-tertiary: #667085;
+  --text-on-accent: #FFFFFF;
+
+  --border-subtle: #D8DFEE;
+  --border-default: #C2CEE4;
+  --border-strong: #98A9C8;
+  --border-focus: #6951FF;
+
+  --accent-primary: #6951FF;
+  --accent-hover: #583EF2;
+  --accent-active: #472BD9;
+  --accent-soft: #F0EDFF;
+  --accent-muted: #E2DDFF;
+
+  --accent-cyan: #0891B2;
+  --accent-cyan-soft: #ECFEFF;
+  --accent-cyan-border: #A5F3FC;
+
+  --status-indexed: #0D9468;
+  --status-indexed-bg: #ECFDF5;
+  --status-indexed-border: #A7F3D0;
+  --status-processing: #C28411;
+  --status-processing-bg: #FFFBEB;
+  --status-processing-border: #FDE68A;
+  --status-failed: #DC2626;
+  --status-failed-bg: #FEF2F2;
+  --status-failed-border: #FECACA;
+  --status-warning: #B45309;
+  --status-warning-bg: #FFFBEB;
+  --status-warning-border: #FDE68A;
+  --status-info: #0891B2;
+  --status-info-bg: #ECFEFF;
+  --status-info-border: #A5F3FC;
+
+  --shadow-xs: 0 1px 2px rgba(12, 17, 29, 0.04);
+  --shadow-sm: 0 1px 3px rgba(12, 17, 29, 0.08), 0 1px 2px rgba(12, 17, 29, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(12, 17, 29, 0.08), 0 2px 4px -2px rgba(12, 17, 29, 0.04);
+  --shadow-lg: 0 12px 20px -4px rgba(12, 17, 29, 0.08), 0 4px 6px -4px rgba(12, 17, 29, 0.03);
+  --shadow-overlay: 0 20px 25px -5px rgba(12, 17, 29, 0.1), 0 8px 10px -6px rgba(12, 17, 29, 0.05);
+  --glow-violet: 0 0 16px -2px rgba(105, 81, 255, 0.25);
+  --glow-cyan: 0 0 16px -2px rgba(8, 145, 178, 0.2);
+}
+
+/* Explicit .dark class matches root dark variables */
 .dark {
-  --bg-canvas: #0E1116;
-  --bg-surface: #161B22;
-  --bg-elevated: #1F2630;
-  --text-primary: #F0F3F6;
-  --text-secondary: #9BA3B0;
-  --border-subtle: #2B3440;
-  --accent-primary: #3B82F6;
-  --accent-hover: #60A5FA;
-  --accent-soft: #1E293B;
-  --status-indexed: #10B981;
-  --status-processing: #F59E0B;
-  --status-failed: #EF4444;
-  --status-warning: #FBBF24;
+  --bg-canvas: #080B12;
+  --bg-surface: #0D1220;
+  --bg-elevated: #12192A;
+  --bg-inset: #06080F;
+  --bg-overlay: rgba(5, 7, 13, 0.78);
+
+  --text-primary: #F2F5FC;
+  --text-secondary: #A0ABC0;
+  --text-tertiary: #68758D;
+  --text-on-accent: #080B12;
+
+  --border-subtle: #263047;
+  --border-default: #35425F;
+  --border-strong: #4B5C82;
+  --border-focus: #9B8CFF;
+
+  --accent-primary: #9B8CFF;
+  --accent-hover: #B2A7FF;
+  --accent-active: #806EFF;
+  --accent-soft: rgba(155, 140, 255, 0.12);
+  --accent-muted: rgba(155, 140, 255, 0.22);
+
+  --accent-cyan: #67DFF5;
+  --accent-cyan-soft: rgba(103, 223, 245, 0.12);
+  --accent-cyan-border: rgba(103, 223, 245, 0.35);
+
+  --status-indexed: #55D6A5;
+  --status-indexed-bg: rgba(85, 214, 165, 0.12);
+  --status-indexed-border: rgba(85, 214, 165, 0.3);
+  --status-processing: #F4C879;
+  --status-processing-bg: rgba(244, 200, 121, 0.12);
+  --status-processing-border: rgba(244, 200, 121, 0.3);
+  --status-failed: #FF7F91;
+  --status-failed-bg: rgba(255, 127, 145, 0.12);
+  --status-failed-border: rgba(255, 127, 145, 0.3);
+  --status-warning: #F4C879;
+  --status-warning-bg: rgba(244, 200, 121, 0.12);
+  --status-warning-border: rgba(244, 200, 121, 0.3);
+  --status-info: #67DFF5;
+  --status-info-bg: rgba(103, 223, 245, 0.12);
+  --status-info-border: rgba(103, 223, 245, 0.3);
 }
 
-body {
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  -webkit-font-smoothing: antialiased;
+/* --- Base Typography & Reset --- */
+@layer base {
+  * {
+    border-color: var(--border-subtle);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--accent-muted);
+    color: var(--text-primary);
+  }
+
+  /* Sleek custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border-default);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--border-strong);
+  }
 }
 
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
+/* --- Visual Instrument Utilities --- */
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Fine technical grid lines */
+  .bg-signal-grid {
+    background-size: 28px 28px;
+    background-image: 
+      linear-gradient(to right, rgba(38, 48, 71, 0.28) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(38, 48, 71, 0.28) 1px, transparent 1px);
+  }
+
+  /* Radial ambient spotlight for active research cards */
+  .ambient-glow-violet {
+    background: radial-gradient(circle at 50% 0%, rgba(155, 140, 255, 0.14) 0%, transparent 68%);
+  }
+
+  .ambient-glow-cyan {
+    background: radial-gradient(circle at 50% 0%, rgba(103, 223, 245, 0.14) 0%, transparent 68%);
+  }
+
+  /* Subtle border glow */
+  .border-glow-violet {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 16px -2px rgba(155, 140, 255, 0.25);
+  }
+
+  .border-glow-cyan {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 14px -2px rgba(103, 223, 245, 0.28);
+  }
 }
 
-/* Visible Keyboard Accessibility Focus State (WCAG 2.2 AA) */
-*:focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 2px;
+/* --- Component Styles --- */
+@layer components {
+  /* Keyboard focus states adhering strictly to WCAG 2.2 AA */
+  *:focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+  }
+
+  /* Precision telemetry pulse */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--bg-elevated) 25%,
+      var(--bg-surface) 50%,
+      var(--bg-elevated) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Toast notification entry */
+  @keyframes toast-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .toast-enter {
+    animation: toast-slide-in var(--duration-normal) var(--ease-spring);
+  }
+
+  /* Evidence Drawer slide animation */
+  @keyframes drawer-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .drawer-enter {
+    animation: drawer-slide-in var(--duration-normal) var(--ease-default);
+  }
+
+  /* Overlay backdrop fade */
+  @keyframes overlay-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .overlay-enter {
+    animation: overlay-fade var(--duration-fast) var(--ease-default);
+  }
+
+  /* Command Palette entrance */
+  @keyframes palette-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-12px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .palette-enter {
+    animation: palette-enter var(--duration-normal) var(--ease-spring);
+  }
+
+  /* Pulsing signal dot */
+  @keyframes signal-beacon {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.45;
+      transform: scale(0.88);
+    }
+  }
+
+  .animate-signal {
+    animation: signal-beacon 2s ease-in-out infinite;
+  }
 }
 
-/* Reduced Motion Support */
+/* --- Reduced Motion Support --- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -68,5 +370,16 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* --- Print Styles --- */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  nav, aside, .no-print {
+    display: none !important;
   }
 }
